@@ -13,7 +13,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -74,7 +73,7 @@ public class MainActivity extends ListActivity {
     final GameInterface.IPayCallback payCallback = new GameInterface.IPayCallback() {
         @Override
         public void onResult(int resultCode, String billingIndex, Object obj) {
-            String result = "";
+            String result;
             switch (resultCode) {
                 case BillingResult.SUCCESS:
                     result = "购买道具：[" + billingIndex + "] 成功！";
@@ -90,7 +89,7 @@ public class MainActivity extends ListActivity {
         }
     };
 
-    Handler mDelaydedHandler = new Handler() {
+    final Handler mDelaydedHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -99,7 +98,7 @@ public class MainActivity extends ListActivity {
         }
     };
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -126,7 +125,7 @@ public class MainActivity extends ListActivity {
         // 计费结果的监听处理，合作方通常需要在收到SDK返回的onResult时，告知用户的购买结果
 
 
-        setListAdapter(new ArrayAdapter<String>(this, R.layout.main_menu_item, BUTTONS));
+        setListAdapter(new ArrayAdapter<>(this, R.layout.main_menu_item, BUTTONS));
         ListView lv = getListView();
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -200,18 +199,10 @@ public class MainActivity extends ListActivity {
     }
 
     private boolean isForceCode(String billingIndex) {
-        if (billingIndex.equals("047")) {
-            return true;
-        } else {
-            return false;
-        }
+        return billingIndex.equals("047");
     }
 
     private boolean isRightCode(String billingIndex) {
-        if (billingIndex.equals("040") || billingIndex.equals("041") || billingIndex.equals("042")) {
-            return true;
-        } else {
-            return false;
-        }
+        return billingIndex.equals("040") || billingIndex.equals("041") || billingIndex.equals("042");
     }
 }
